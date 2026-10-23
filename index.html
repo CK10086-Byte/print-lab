@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#172838">
+<meta name="description" content="基于 Python 数据结构与算法课程的打印任务交互实验。观察数组、循环队列、单链表和栈如何完成登记、排队、处理和撤销。">
+<title>打印任务实验室 · 数据结构交互实验</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2327685c'/%3E%3Cpath d='M10 12V6h12v6M10 24H6V12h20v12h-4M10 20h12v7H10z' fill='none' stroke='white' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>:root{--bg:#f5f7f9;--ink:#172333;--muted:#7c8796;--line:#e7ebf0;--green:#27685c;--green-light:#eaf3ef;--amber:#ac771c;--amber-light:#fbf3e4;--navy:#172838;--radius:13px;font-family:Inter,"Segoe UI","Microsoft YaHei",sans-serif;color:var(--ink);font-synthesis:none}*{box-sizing:border-box}body{margin:0;background:var(--bg)}button,input{font:inherit}button,a,input{ -webkit-tap-highlight-color:transparent}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #77ad9f;outline-offset:3px}button svg,a svg{width:18px;height:18px;flex-shrink:0}svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.sidebar{position:fixed;inset:0 auto 0 0;width:218px;background:var(--navy);color:#fff;padding:33px 20px;display:flex;flex-direction:column;z-index:10}.brand{display:flex;gap:11px;align-items:center;padding-left:8px}.brand-mark{display:grid;place-items:center;width:38px;height:38px;background:#2a5c56;border-radius:11px;color:#d6ede4}.brand-mark svg{width:24px;height:24px}.brand strong{display:block;font-size:15px;letter-spacing:0;white-space:nowrap}.brand small{display:block;margin-top:5px;font-size:10px;letter-spacing:2.1px;color:#91a6b4}.nav-caption{font-size:10px;letter-spacing:2px;color:#768d9e;margin:47px 12px 14px}.nav{display:grid;gap:7px}.nav a{display:flex;align-items:center;gap:12px;padding:13px;border-radius:8px;color:#aabac7;text-decoration:none;font-size:13px}.nav a:hover{background:#213647;color:#fff}.nav a.active{background:#2a4352;color:#effbf5}.nav a.active:after{content:"";margin-left:auto;width:5px;height:5px;background:#87b8a5;border-radius:50%}.sidebar-bottom{margin-top:auto;border-top:1px solid #304351;padding:21px 10px 0;font-size:11px;color:#91a6b4;line-height:1.9}.sidebar-bottom strong{display:flex;align-items:center;gap:7px;color:#c4d6dc;font-size:12px;font-weight:500}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#74aa92}.app{margin-left:218px;min-height:100vh}.topbar{height:70px;background:#fff;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 38px;font-size:12px;color:var(--muted)}.breadcrumb span{margin:0 11px;color:#bcc4ce}.session-tag{display:flex;align-items:center;gap:7px;font-size:11px;color:#718173}.session-tag .dot{background:#86ac93}main{max-width:1570px;margin:auto;padding:30px 38px 22px}.page-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:23px}.eyebrow{font-size:10px;letter-spacing:2px;color:#83929e;text-transform:uppercase;margin:0 0 10px}.page-heading h1{font-size:28px;letter-spacing:-.6px;line-height:1.3;margin:0;font-weight:650}.page-heading p{margin:10px 0 0;font-size:12px;color:var(--muted);line-height:1.6}.heading-actions{display:flex;gap:10px;flex-shrink:0}.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:39px;padding:10px 15px;font-size:12px;line-height:1.2;border:1px solid #dae1e7;border-radius:7px;background:#fff;color:#526172;font-weight:550;transition:background .15s,transform .15s}.btn:hover:not(:disabled){background:#f6f8fa;transform:translateY(-1px)}.btn.primary{background:var(--green);border-color:var(--green);color:#fff}.btn.primary:hover:not(:disabled){background:#215d52}.btn.dark{background:#213b4e;border-color:#213b4e;color:#fff}.btn.dark:hover:not(:disabled){background:#172e3f}.btn.wide{width:100%}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}.stat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;display:flex;justify-content:space-between;align-items:center;min-width:0}.stat-label{font-size:11px;color:#7d8895;margin-bottom:9px}.stat-value{font-size:27px;font-weight:630;letter-spacing:-.6px;line-height:1.2}.stat-value small{font-size:11px;font-weight:400;color:#a2aab4;letter-spacing:0;margin-left:6px}.stat-icon{width:37px;height:37px;border-radius:10px;display:grid;place-items:center;background:#eef2f7;color:#647f9b}.stat-icon svg{width:19px;height:19px}.stat-icon.amber{color:#ba8c39;background:#faf3e7}.stat-icon.green{color:#458775;background:#eef6f1}.stat-icon.grey{color:#84919d;background:#f2f4f6}.workspace{display:grid;grid-template-columns:268px minmax(0,1fr);gap:20px;align-items:stretch}.card{border:1px solid var(--line);background:#fff;border-radius:var(--radius);min-width:0}.form-card{padding:23px 21px}.card-title{font-size:15px;font-weight:650;margin:0}.card-desc{font-size:11px;color:var(--muted);margin:7px 0 0;line-height:1.6}.form-card .eyebrow{font-size:9px;margin-bottom:8px;color:#8fa396;letter-spacing:1.3px}.form-field{display:block;margin-top:21px;font-size:11px;color:#4c5a69}.form-field span{display:block;margin-bottom:8px}.form-field input{width:100%;height:41px;border:1px solid #e0e6eb;border-radius:6px;background:#fcfdfd;padding:9px 12px;color:var(--ink);font-size:12px}.form-field input::placeholder{color:#adb5bf}.pages-control{position:relative}.pages-control input{padding-right:40px}.pages-control em{position:absolute;right:13px;top:12px;font-size:11px;color:#9ba4af;font-style:normal}.submit-btn{margin-top:20px}.form-hint{font-size:10px;text-align:center;color:#9aa4ae;margin:10px 0 0;line-height:1.5}.operations{border-top:1px solid var(--line);margin-top:24px;padding-top:20px}.operations .card-title{font-size:12px;margin-bottom:13px}.operations .btn+.btn{margin-top:9px}.operation-hint{font-size:10px;line-height:1.7;color:#98a2ae;margin:12px 0 0;min-height:32px}.table-card{overflow:hidden;display:flex;flex-direction:column;min-height:424px}.table-head{padding:23px 23px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}.search-form{display:flex;align-items:center;gap:6px}.search-input{height:33px;width:153px;border:1px solid #e3e8ee;padding:7px 10px;border-radius:6px;font-size:11px;color:#405164;background:#fcfdfd}.search-btn,.clear-btn{padding:7px;min-height:33px}.clear-btn{border:0;background:none;color:#7a8794;font-size:11px;white-space:nowrap}.table-toolbar{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:0 23px}.tabs{display:flex;gap:22px}.tab{background:none;border:0;border-bottom:2px solid transparent;padding:10px 0 12px;font-size:11px;color:#8c96a2}.tab.active{border-color:var(--green);color:var(--green);font-weight:650}.tab span{font-size:10px;margin-left:5px;color:#9da6af}.tab.active span{color:var(--green)}.array-note{font-size:9px;letter-spacing:.3px;color:#a2acb5}.table-scroll{overflow:auto;flex:1;max-height:335px;min-height:230px}.table-scroll table{border-collapse:collapse;width:100%;font-size:12px;white-space:nowrap}.table-scroll thead{position:sticky;top:0;background:#f9fafc;z-index:1}.table-scroll th{text-align:left;font-size:10px;font-weight:500;color:#8d98a6;padding:13px 23px;border-bottom:1px solid #eef1f5}.table-scroll td{padding:15px 23px;border-bottom:1px solid #f0f2f5;color:#536170}.table-scroll td:first-child{color:#80919f;font-size:11px;font-variant-numeric:tabular-nums}.table-scroll tbody tr:hover{background:#fafcfb}.table-scroll tbody tr:last-child td{border:0}.owner-cell{font-weight:550;color:#344656!important;max-width:150px;overflow:hidden;text-overflow:ellipsis}.status{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:5px;font-size:10px}.status:before{content:"";width:4px;height:4px;border-radius:50%;background:currentColor}.status.waiting{background:var(--amber-light);color:#b58a43}.status.done{background:var(--green-light);color:#4d8978}.position-cell{font-size:10px;color:#a1aab4!important}.empty-table{padding:42px 20px;text-align:center;color:#a1abb6}.empty-icon{margin:0 auto 13px;display:grid;place-items:center;width:54px;height:54px;border-radius:14px;background:#f3f6f7;color:#8c9caa}.empty-icon svg{width:28px;height:28px}.empty-table strong{display:block;font-size:12px;font-weight:500;color:#7b8a97}.empty-table p{font-size:10px;line-height:1.7;margin:8px auto 0;max-width:290px}.table-foot{display:flex;align-items:center;justify-content:space-between;padding:12px 23px;border-top:1px solid var(--line);font-size:10px;color:#97a2ac}.table-foot span:first-child{display:flex;gap:6px;align-items:center}.table-foot svg{width:13px;height:13px}.section-head{display:flex;align-items:center;justify-content:space-between;margin:28px 0 14px}.section-head h2{font-size:15px;margin:0;font-weight:650}.section-head p{font-size:10px;color:#98a3af;margin:0}.structures{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.structure{padding:19px 20px 16px;min-height:212px;display:flex;flex-direction:column}.structure-title{display:flex;align-items:center;justify-content:space-between;gap:12px}.structure-title h3{font-size:12px;margin:0;font-weight:600;display:flex;align-items:center;gap:7px}.structure-title h3 svg{height:16px;width:16px;color:#96a398}.count-badge{font-size:10px;color:#95a0ab;padding:3px 7px;border:1px solid #e9edf2;border-radius:4px}.structure-desc{font-size:10px;color:#9aa4af;margin:7px 0 14px}.flow-list{display:flex;align-items:center;gap:6px;min-height:80px;overflow:auto;padding:4px 0 9px;flex:1}.job-node{flex-shrink:0;min-width:49px;border:1px solid #eddcba;background:#fcf8ef;border-radius:6px;text-align:center;padding:9px 6px;position:relative}.job-node strong{font-size:11px;color:#a57b35;display:block}.job-node span{font-size:9px;color:#ab9b80;display:block;margin-top:5px;max-width:65px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.job-node.done{background:#f0f7f2;border-color:#d8e8df}.job-node.done strong{color:#588370}.job-node.done span{color:#96a99d}.job-node.blank{border:1px dashed #e3e7ec;background:transparent;color:#c4cbd2;min-width:34px;padding:14px 8px;font-size:12px}.flow-arrow{font-size:13px;color:#c4ccd4;flex-shrink:0}.empty-structure{font-size:11px;color:#a9b2bd;text-align:center;margin:auto;width:100%;line-height:1.8}.structure-bottom{border-top:1px solid #f0f2f5;padding-top:11px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:9px;color:#a0aab4}.stack-list{display:flex;flex-direction:column;gap:6px;overflow:auto;max-height:105px;padding:4px 2px 10px;flex:1}.stack-item{display:flex;justify-content:space-between;gap:10px;font-size:10px;background:#f2f5f8;border:1px solid #e7edf3;border-radius:5px;padding:7px 9px;color:#7c8da1;flex-shrink:0}.stack-item:first-child{background:#edf3f5;border-color:#d6e3e7;color:#496b78}.stack-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px}.top-label{font-size:9px;font-weight:500}.details-box{margin-top:13px;font-size:10px;color:#8b99a5}.details-box summary{cursor:pointer;list-style:none}.details-box summary:before{content:"＋ ";color:#9ca7b2}.details-box[open] summary:before{content:"－ "}.slots{display:flex;gap:6px;margin-top:11px}.slot{padding:6px 8px;border:1px solid #e5eaf0;border-radius:5px;text-align:center;min-width:36px;font-size:10px}.slot small{display:block;font-size:8px;color:#a6afba;margin-bottom:4px}.slot.front{border-color:#c6a15e;background:#fdf8ed}.queue-meta{font-size:9px;line-height:1.7;color:#a0a9b2;margin-top:9px}.log-card{padding:0 21px;margin-bottom:12px}.log-empty{font-size:11px;color:#a7b0ba;padding:22px 0}.log-row{display:grid;grid-template-columns:40px 64px 1fr 70px;gap:10px;align-items:center;padding:13px 0;border-bottom:1px solid #f0f2f5;font-size:11px}.log-row:last-child{border:0}.log-number,.log-time{font-size:10px;color:#a0aab5;font-variant-numeric:tabular-nums}.log-type{font-size:10px;color:#678a7b}.log-message{color:#758292;overflow-wrap:anywhere}.log-time{text-align:right}.footer{display:flex;justify-content:space-between;font-size:9px;color:#a6b0ba;padding:10px 0 4px}.footer a{color:#8797a7;text-decoration:none}.toast{position:fixed;bottom:26px;left:calc(50% + 109px);transform:translate(-50%,18px);background:#203b35;color:white;box-shadow:0 8px 30px #142c2923;padding:12px 20px;border-radius:8px;font-size:12px;z-index:100;opacity:0;pointer-events:none;transition:transform .2s,opacity .2s;max-width:min(520px,90vw);line-height:1.6}.toast.show{opacity:1;transform:translate(-50%,0)}.toast.error{background:#8d5048}.toast.info{background:#3c5367}.mobile-brand{display:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}html{scroll-behavior:smooth;scroll-padding-top:20px}@media(min-width:1500px){main{padding-left:48px;padding-right:48px}.workspace{grid-template-columns:290px minmax(0,1fr)}}@media(max-width:1120px){.sidebar{width:184px;padding-left:14px;padding-right:14px}.brand strong{font-size:15px}.brand-mark{width:33px;height:33px}.brand{gap:8px}.app{margin-left:184px}.topbar{padding:0 25px}main{padding:26px 25px}.workspace{grid-template-columns:240px minmax(0,1fr);gap:16px}.table-head{align-items:flex-start;flex-direction:column;padding:20px}.table-toolbar{padding:0 20px}.array-note{display:none}.table-scroll td,.table-scroll th{padding-left:18px;padding-right:18px}.stat{padding:16px}.stat-icon{display:none}.structures{gap:12px}.structure{padding:16px 13px}.toast{left:calc(50% + 92px)}}@media(max-width:800px){.sidebar{display:none}.app{margin-left:0}.topbar{height:58px;padding:0 20px}.breadcrumb{font-size:11px}.session-tag{font-size:10px}main{padding:23px 20px}.page-heading{align-items:flex-start}.page-heading h1{font-size:24px}.page-heading p{max-width:230px;font-size:11px}.heading-actions{gap:7px;flex-direction:column}.heading-actions .btn{min-height:33px;padding:8px 11px;font-size:10px}.stats{gap:10px}.stat{padding:15px 13px}.stat-label{font-size:10px}.stat-value{font-size:23px}.stat-value small{font-size:9px}.workspace{grid-template-columns:218px minmax(0,1fr);gap:13px}.form-card{padding:20px 16px}.structures{grid-template-columns:1fr 1fr}.structure:last-child{grid-column:1/-1}.stack-list{max-height:120px}.section-head p{max-width:210px;line-height:1.6;text-align:right}.toast{left:50%}.table-scroll td,.table-scroll th{padding-left:12px;padding-right:12px}.position-cell{display:none}.table-scroll th:last-child{display:none}}@media(max-width:560px){main{padding:21px 14px}.topbar{padding:0 16px}.breadcrumb{font-size:10px}.stats{grid-template-columns:1fr 1fr}.stat{padding:14px 16px}.stat-icon{display:grid;width:30px;height:30px}.stat-icon svg{width:16px;height:16px}.workspace{grid-template-columns:1fr}.form-card{padding:20px}.form-card form{display:grid;grid-template-columns:1fr 100px;column-gap:12px}.form-card .form-field{margin-top:16px}.form-card .submit-btn,.form-card .form-hint{grid-column:1/-1}.operations{margin-top:17px;padding-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:8px}.operations .card-title,.operation-hint{grid-column:1/-1;margin:0}.operations .card-title{margin-bottom:3px}.operations .btn+.btn{margin:0}.operation-hint{min-height:0;margin-top:3px}.table-head{flex-direction:row;align-items:flex-start;gap:10px;padding:20px 16px 13px}.search-input{width:112px;font-size:10px}.search-btn{padding:7px}.card-title{font-size:14px}.card-desc{font-size:10px}.table-toolbar{padding:0 16px}.table-scroll{max-height:310px}.table-scroll td,.table-scroll th{padding:12px 16px}.owner-cell{max-width:105px}.table-foot{padding:12px 16px}.structures{grid-template-columns:1fr}.structure:last-child{grid-column:auto}.structure{padding:18px 20px}.section-head{margin-top:24px}.section-head h2{font-size:14px}.section-head p{font-size:9px;max-width:160px}.flow-list{min-height:73px}.log-card{padding:0 16px}.log-row{grid-template-columns:24px 48px 1fr;gap:8px}.log-time{display:none}.footer{gap:15px;line-height:1.7}.page-heading p{max-width:210px}.toast{bottom:18px;font-size:11px;min-width:230px;text-align:center}.tabs{gap:18px}.search-form{gap:3px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}} 
+</style>
+</head>
+<body>
+<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><defs>
+<symbol id="i-printer" viewBox="0 0 24 24"><path d="M7 8V3h10v5M7 17H3V8h18v9h-4M7 14h10v7H7zM17 11h1"/></symbol>
+<symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 10 5-10 5L2 8zM2 12l10 5 10-5M2 16l10 5 10-5"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="m9 4 12 8-12 8z"/></symbol>
+<symbol id="i-undo" viewBox="0 0 24 24"><path d="M4 10h10a6 6 0 0 1 0 12M4 10l6-6M4 10l6 6" transform="translate(0 -2)"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></symbol>
+<symbol id="i-queue" viewBox="0 0 24 24"><rect x="2" y="7" width="5" height="10" rx="1"/><rect x="10" y="7" width="5" height="10" rx="1"/><path d="M18 12h5m-3-3 3 3-3 3"/></symbol>
+<symbol id="i-link" viewBox="0 0 24 24"><path d="m10 13 4-4M8 16l-2 2a4 4 0 0 1-6-6l5-5a4 4 0 0 1 6 0M13 9l2-2a4 4 0 0 1 6 6l-5 5a4 4 0 0 1-6 0" transform="translate(1 -2)"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H5v20h14V7zM14 2v6h5M8 12h8M8 16h6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 8 3v6c0 5-8 11-8 11S4 16 4 11V5z"/><path d="m8 11 3 3 5-5"/></symbol>
+</defs></svg>
+<aside class="sidebar" aria-label="主导航">
+  <div class="brand"><div class="brand-mark"><svg><use href="#i-printer"/></svg></div><div><strong>打印任务实验室</strong><small>PRINT LAB</small></div></div>
+  <div class="nav-caption">实验导航</div>
+  <nav class="nav"><a class="active" href="#workbench"><svg><use href="#i-grid"/></svg>任务工作台</a><a href="#structures"><svg><use href="#i-layers"/></svg>数据结构</a><a href="#activity"><svg><use href="#i-list"/></svg>运行日志</a></nav>
+  <div class="sidebar-bottom"><strong><i class="dot"></i>课堂交互实验</strong><div>数组 · 链表 · 栈 · 队列</div><div>基于 Python 数据结构与算法</div></div>
+</aside>
+<div class="app">
+  <header class="topbar"><div class="breadcrumb">数据结构与算法<span>/</span>综合实验</div><div class="session-tag"><i class="dot"></i>当前浏览器会话</div></header>
+  <main>
+    <section class="page-heading" id="workbench"><div><div class="eyebrow">DATA STRUCTURES IN ACTION</div><h1>打印任务工作台</h1><p>登记与处理打印任务，观察四种数据结构如何协作。</p></div><div class="heading-actions"><button class="btn" id="load-demo"><svg><use href="#i-plus"/></svg>载入示例</button><button class="btn" id="check-state"><svg><use href="#i-check"/></svg>检查状态</button></div></section>
+    <section class="stats" aria-label="任务概况">
+      <div class="stat"><div><div class="stat-label">已登记任务</div><div class="stat-value"><span id="total-count">0</span><small>/ 20</small></div></div><div class="stat-icon"><svg><use href="#i-file"/></svg></div></div>
+      <div class="stat"><div><div class="stat-label">等待处理</div><div class="stat-value"><span id="waiting-count">0</span><small>/ 5</small></div></div><div class="stat-icon amber"><svg><use href="#i-clock"/></svg></div></div>
+      <div class="stat"><div><div class="stat-label">已完成任务</div><div class="stat-value"><span id="done-count">0</span><small>项</small></div></div><div class="stat-icon green"><svg><use href="#i-check"/></svg></div></div>
+      <div class="stat"><div><div class="stat-label">等待打印页数</div><div class="stat-value"><span id="pages-count">0</span><small>页</small></div></div><div class="stat-icon grey"><svg><use href="#i-printer"/></svg></div></div>
+    </section>
+    <section class="workspace" aria-label="任务操作与登记表">
+      <aside class="card form-card"><div class="eyebrow">创建任务</div><h2 class="card-title">新建打印任务</h2><p class="card-desc">填写信息后，任务将加入等待队列。</p>
+        <form id="submit-form" novalidate><label class="form-field"><span>提交人姓名</span><input id="owner" name="owner" autocomplete="off" placeholder="例如：小林" maxlength="80" required></label><label class="form-field"><span>打印页数</span><div class="pages-control"><input id="pages" name="pages" aria-label="打印页数" type="number" min="1" step="1" value="3" required><em aria-hidden="true">页</em></div></label><button class="btn primary wide submit-btn" id="submit-job" type="submit"><svg><use href="#i-plus"/></svg>添加到等待队列</button><p class="form-hint" id="capacity-hint">当前还可加入 5 个等待任务</p></form>
+        <div class="operations"><h3 class="card-title">任务操作</h3><button class="btn dark wide" id="process-job"><svg><use href="#i-play"/></svg>处理下一项</button><button class="btn wide" id="undo-job"><svg><use href="#i-undo"/></svg>撤销最近处理</button><p class="operation-hint" id="operation-hint">任务将按提交顺序依次处理。</p></div>
+      </aside>
+      <section class="card table-card" aria-labelledby="table-title"><div class="table-head"><div><h2 class="card-title" id="table-title">任务登记表</h2><p class="card-desc">数组保存全部任务及其当前状态</p></div><form class="search-form" id="search-form"><label for="search-id" class="sr-only">按任务编号查询</label><input class="search-input" id="search-id" inputmode="numeric" autocomplete="off" placeholder="输入任务编号"><button class="btn search-btn" aria-label="查询任务" title="查询任务" type="submit"><svg><use href="#i-search"/></svg></button><button type="button" class="clear-btn" id="clear-search" hidden>清除</button></form></div>
+        <div class="table-toolbar"><div class="tabs" role="group" aria-label="按状态筛选"><button class="tab active" data-filter="全部" aria-pressed="true">全部<span id="tab-all-count">0</span></button><button class="tab" data-filter="等待" aria-pressed="false">等待<span id="tab-wait-count">0</span></button><button class="tab" data-filter="完成" aria-pressed="false">完成<span id="tab-done-count">0</span></button></div><span class="array-note">ARRAY TABLE</span></div>
+        <div class="table-scroll"><table><thead><tr><th scope="col">任务编号</th><th scope="col">提交人</th><th scope="col">打印页数</th><th scope="col">任务状态</th><th scope="col">排队位置</th></tr></thead><tbody id="job-rows"></tbody></table><div class="empty-table" id="empty-table"><div class="empty-icon"><svg><use href="#i-printer"/></svg></div><strong id="empty-title">还没有打印任务</strong><p id="empty-description">从左侧登记第一个任务，或点击右上角的“载入示例”。</p></div></div>
+        <div class="table-foot"><span><svg><use href="#i-shield"/></svg><span id="table-summary">共 0 项任务</span></span><span id="array-range">数组有效区为空</span></div>
+      </section>
+    </section>
+    <section id="structures"><div class="section-head"><h2>看看数据如何流动</h2><p>每次操作后，以下结构都会同步更新</p></div><div class="structures">
+      <section class="card structure"><div class="structure-title"><h3><svg><use href="#i-queue"/></svg>等待队列</h3><span class="count-badge" id="queue-count">0 / 5</span></div><p class="structure-desc">循环队列 · 先进先出</p><div class="flow-list" id="queue-view"></div><div class="structure-bottom"><span>左侧为队首</span><span>新任务从队尾进入</span></div><details class="details-box" id="queue-details"><summary>查看底层槽位</summary><div class="slots" id="queue-slots"></div><div class="queue-meta" id="queue-meta"></div></details></section>
+      <section class="card structure"><div class="structure-title"><h3><svg><use href="#i-link"/></svg>完成记录</h3><span class="count-badge" id="linked-count">0 项</span></div><p class="structure-desc">单链表 · 按完成先后记录</p><div class="flow-list" id="linked-view"></div><div class="structure-bottom"><span>头结点 → 尾结点</span><span>处理后追加到尾部</span></div></section>
+      <section class="card structure"><div class="structure-title"><h3><svg><use href="#i-layers"/></svg>撤销栈</h3><span class="count-badge" id="stack-count">0 项</span></div><p class="structure-desc">顺序栈 · 最近完成的先撤销</p><div class="stack-list" id="stack-view"></div><div class="structure-bottom"><span>栈顶显示在上方</span><span>撤销后恢复到队首</span></div></section>
+    </div></section>
+    <section id="activity"><div class="section-head"><h2>运行日志</h2><p>记录最近 30 次操作</p></div><div class="card log-card" id="log-view"><div class="log-empty">操作记录会显示在这里。</div></div></section>
+    <footer class="footer"><span>仅模拟打印 · 本次会话内保存 · 刷新页面后清空</span><a href="./print_lab.py" download="print_lab.py">下载 Python 配套代码 ↗</a></footer>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<script type="module">// 浏览器版数据结构，与 print_lab.py 的接口和业务规则对应。
+class LabError extends Error {
+  constructor(message, kind = 'ValueError') { super(message); this.name = kind; }
+}
+const fail = (message, kind) => { throw new LabError(message, kind); };
+function capacityCheck(n) {
+  if (!Number.isSafeInteger(n) || n <= 0) fail('容量必须是正整数');
+}
+class ArrayTable {
+  constructor(capacity = 20) { capacityCheck(capacity); this.capacity = capacity; this._data = Array(capacity).fill(null); this._size = 0; }
+  is_full() { return this._size === this.capacity; }
+  append(job) { if (this.is_full()) fail('任务登记表已满', 'OverflowError'); this._data[this._size++] = job; }
+  find(id) { for (let i = 0; i < this._size; i++) if (this._data[i].job_id === id) return this._data[i]; return null; }
+  get(index) { if (!Number.isSafeInteger(index) || index < 0 || index >= this._size) fail('登记表下标越界', 'IndexError'); return this._data[index]; }
+  to_list() { return Array.from({length:this._size}, (_, i) => this._data[i]); }
+}
+class Node { constructor(value) { this.value = value; this.next = null; } }
+class SinglyLinkedList {
+  constructor() { this.head = null; this.tail = null; this._size = 0; }
+  append(value) { const node = new Node(value); if (this.head === null) this.head = this.tail = node; else { this.tail.next = node; this.tail = node; } this._size++; }
+  pop_tail() {
+    if (this.head === null) fail('完成记录为空', 'IndexError');
+    const value = this.tail.value;
+    if (this.head === this.tail) this.head = this.tail = null;
+    else { let previous = this.head; while (previous.next !== this.tail) previous = previous.next; previous.next = null; this.tail = previous; }
+    this._size--; return value;
+  }
+  to_list() { const result = []; let node = this.head; while (node !== null) { result.push(node.value); node = node.next; } return result; }
+}
+class ArrayStack {
+  constructor(capacity = 20) { capacityCheck(capacity); this.capacity = capacity; this._data = Array(capacity).fill(null); this._size = 0; }
+  is_full() { return this._size === this.capacity; }
+  push(value) { if (this.is_full()) fail('撤销栈已满', 'OverflowError'); this._data[this._size++] = value; }
+  pop() { if (this._size === 0) fail('撤销栈为空', 'IndexError'); const value = this._data[--this._size]; this._data[this._size] = null; return value; }
+  peek() { if (this._size === 0) fail('撤销栈为空', 'IndexError'); return this._data[this._size - 1]; }
+  to_list() { return Array.from({length:this._size}, (_, i) => this._data[i]); }
+}
+class CircularQueue {
+  constructor(capacity = 5) { capacityCheck(capacity); this.capacity = capacity; this._data = Array(capacity).fill(null); this._front = 0; this._size = 0; }
+  is_full() { return this._size === this.capacity; }
+  enqueue(value) { if (this.is_full()) fail('等待队列已满', 'OverflowError'); const rear = (this._front + this._size) % this.capacity; this._data[rear] = value; this._size++; }
+  dequeue() { if (this._size === 0) fail('等待队列为空', 'IndexError'); const value = this._data[this._front]; this._data[this._front] = null; this._front = (this._front + 1) % this.capacity; this._size--; return value; }
+  enqueue_front(value) { if (this.is_full()) fail('等待队列已满，无法撤销', 'OverflowError'); this._front = (this._front - 1 + this.capacity) % this.capacity; this._data[this._front] = value; this._size++; }
+  peek() { if (this._size === 0) fail('等待队列为空', 'IndexError'); return this._data[this._front]; }
+  to_list() { return Array.from({length:this._size}, (_, i) => this._data[(this._front + i) % this.capacity]); }
+}
+class PrintService {
+  constructor(table_capacity = 20, queue_capacity = 5) { this.table = new ArrayTable(table_capacity); this.waiting = new CircularQueue(queue_capacity); this.completed = new SinglyLinkedList(); this.undo_stack = new ArrayStack(table_capacity); this._next_id = 1; }
+  submit(owner, pages) {
+    if (typeof owner !== 'string' || !owner.trim()) fail('姓名不能为空');
+    if (!Number.isSafeInteger(pages) || pages <= 0) fail('页数必须是正整数');
+    if (this.table.is_full()) fail('任务登记表已满', 'OverflowError');
+    if (this.waiting.is_full()) fail('等待队列已满', 'OverflowError');
+    const job = {job_id:this._next_id, owner:owner.trim(), pages, status:'等待'};
+    this.table.append(job); this.waiting.enqueue(job); this._next_id++; return job;
+  }
+  process_next() {
+    if (!this.waiting._size) fail('等待队列为空', 'IndexError');
+    if (this.undo_stack.is_full()) fail('撤销栈已满', 'OverflowError');
+    const job = this.waiting.dequeue(); job.status = '完成'; this.completed.append(job); this.undo_stack.push(job); return job;
+  }
+  undo_process() {
+    if (!this.undo_stack._size) fail('没有可撤销的处理记录', 'IndexError');
+    if (this.waiting.is_full()) fail('等待队列已满，无法撤销', 'OverflowError');
+    const job = this.undo_stack.peek();
+    if (this.completed.tail === null || this.completed.tail.value !== job) fail('完成链表与撤销栈不一致', 'RuntimeError');
+    this.undo_stack.pop(); this.completed.pop_tail(); job.status = '等待'; this.waiting.enqueue_front(job); return job;
+  }
+  find(id) { if (!Number.isSafeInteger(id) || id <= 0) fail('编号必须是正整数'); return this.table.find(id); }
+  snapshot() { return {all:this.table.to_list().map(j => [j.job_id,j.owner,j.pages,j.status]), waiting:this.waiting.to_list().map(j => j.job_id), completed:this.completed.to_list().map(j => j.job_id), undo_bottom_to_top:this.undo_stack.to_list().map(j => j.job_id), next_id:this._next_id}; }
+  check_invariants() {
+    const all = this.table.to_list(), waiting = this.waiting.to_list(), completed = this.completed.to_list(), stack = this.undo_stack.to_list();
+    const ids = jobs => jobs.map(j => j.job_id), a = ids(all), w = ids(waiting), c = ids(completed);
+    const require = (ok, message) => { if (!ok) fail(message, 'AssertionError'); };
+    require(new Set(a).size === a.length, '登记表出现重复编号');
+    require(new Set(w).size === w.length && new Set(c).size === c.length, '出现重复任务');
+    require(w.every(id => !c.includes(id)), '任务同时处于两个状态');
+    require(a.length === w.length + c.length && [...w,...c].every(id => a.includes(id)), '任务丢失');
+    require(JSON.stringify(c) === JSON.stringify(ids(stack)), '完成顺序与栈不一致');
+    for (const j of waiting) require(j.status === '等待' && this.table.find(j.job_id) === j, '等待任务状态或对象引用错误');
+    for (const j of completed) require(j.status === '完成' && this.table.find(j.job_id) === j, '完成任务状态或对象引用错误');
+    return true;
+  }
+}
+
+const service = new PrintService();
+let currentFilter = '全部', queryId = null, toastTimeout, sequence = 0;
+const logs = [];
+const $ = id => document.getElementById(id);
+function node(tag, className, content) { const element = document.createElement(tag); if (className) element.className = className; if (content !== undefined) element.textContent = String(content); return element; }
+function notify(message, type = '') { clearTimeout(toastTimeout); $('toast').textContent = message; $('toast').className = 'toast show ' + type; toastTimeout = setTimeout(() => $('toast').classList.remove('show'), 3600); }
+function record(type, message) { logs.unshift({number:++sequence, type, message, time:new Date().toLocaleTimeString('zh-CN',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'})}); if (logs.length > 30) logs.length = 30; }
+function numberInput(text, description) { const value = String(text).trim(); if (!/^[0-9]+$/.test(value) || !Number.isSafeInteger(Number(value)) || Number(value) <= 0) throw new LabError(description + '必须是正整数'); return Number(value); }
+function perform(operation) { try { operation(); render(); } catch (error) { notify(error.message || '操作未完成，请重试', 'error'); } }
+function jobNode(job, done = false) { const element = node('div','job-node'+(done?' done':'')); element.append(node('strong','', '#' + String(job.job_id).padStart(2,'0')),node('span','',job.owner)); element.title = `任务 ${job.job_id} · ${job.owner} · ${job.pages} 页`; return element; }
+function renderTable() {
+  const jobs = service.table.to_list(), waiting = service.waiting.to_list();
+  const filtered = jobs.filter(job => (currentFilter === '全部' || job.status === currentFilter) && (queryId === null || job.job_id === queryId));
+  const body = $('job-rows'); body.replaceChildren();
+  for (const job of filtered) {
+    const row = node('tr'); row.dataset.jobId = String(job.job_id);
+    row.append(node('td','', '#' + String(job.job_id).padStart(2,'0')),node('td','owner-cell',job.owner),node('td','',job.pages + ' 页'));
+    const statusCell = node('td'); statusCell.append(node('span','status '+(job.status === '等待'?'waiting':'done'),job.status)); row.append(statusCell);
+    const position = waiting.indexOf(job); row.append(node('td','position-cell', position < 0 ? '—' : position === 0 ? '下一项' : `第 ${position+1} 位`)); body.append(row);
+  }
+  $('empty-table').hidden = filtered.length !== 0;
+  if (!jobs.length) { $('empty-title').textContent = '还没有打印任务'; $('empty-description').textContent = '从左侧登记第一个任务，或点击右上角的“载入示例”。'; }
+  else if (queryId !== null) { $('empty-title').textContent = `没有找到任务 #${queryId}`; $('empty-description').textContent = '请检查任务编号，或清除查询后查看全部记录。'; }
+  else { $('empty-title').textContent = `暂无${currentFilter}任务`; $('empty-description').textContent = '切换筛选条件，或继续提交和处理任务。'; }
+  $('clear-search').hidden = queryId === null;
+  $('table-summary').textContent = queryId !== null || currentFilter !== '全部' ? `显示 ${filtered.length} 项，共 ${jobs.length} 项任务` : `共 ${jobs.length} 项任务`;
+  $('array-range').textContent = jobs.length ? `数组有效区 [0, ${jobs.length-1}]` : '数组有效区为空';
+  for (const tab of document.querySelectorAll('[data-filter]')) { const selected = tab.dataset.filter === currentFilter; tab.classList.toggle('active',selected); tab.setAttribute('aria-pressed',String(selected)); }
+}
+function renderStructures() {
+  const waiting = service.waiting.to_list(), completed = service.completed.to_list(), stack = service.undo_stack.to_list();
+  $('queue-view').replaceChildren();
+  if (!waiting.length) $('queue-view').append(node('div','empty-structure','队列为空，等待新任务'));
+  else { waiting.forEach((job,index) => { if (index) $('queue-view').append(node('span','flow-arrow','→')); $('queue-view').append(jobNode(job)); }); }
+  $('queue-count').textContent = `${waiting.length} / ${service.waiting.capacity}`;
+  $('queue-slots').replaceChildren();
+  service.waiting._data.forEach((job,index) => { const slot = node('div','slot'+(waiting.length && index === service.waiting._front?' front':'')); slot.append(node('small','', '['+index+']'),node('span','',job ? '#'+job.job_id : '空')); $('queue-slots').append(slot); });
+  $('queue-meta').textContent = `队首下标 ${service.waiting._front} · 有效长度 ${waiting.length} · 金色边框标记非空队列的队首`;
+  $('linked-count').textContent = completed.length + ' 项'; $('linked-view').replaceChildren();
+  if (!completed.length) $('linked-view').append(node('div','empty-structure','尚无完成记录'));
+  else { completed.forEach((job,index) => { if(index) $('linked-view').append(node('span','flow-arrow','→')); $('linked-view').append(jobNode(job,true)); }); $('linked-view').append(node('span','flow-arrow','→ ∅')); }
+  $('stack-count').textContent = stack.length + ' 项'; $('stack-view').replaceChildren();
+  if (!stack.length) $('stack-view').append(node('div','empty-structure','暂无可撤销的处理'));
+  else stack.reverse().forEach((job,index) => { const item = node('div','stack-item'); item.append(node('span','',`#${String(job.job_id).padStart(2,'0')}  ${job.owner}`),node('b','top-label',index === 0 ? '栈顶' : '')); $('stack-view').append(item); });
+}
+function renderLogs() { $('log-view').replaceChildren(); if(!logs.length) $('log-view').append(node('div','log-empty','操作记录会显示在这里。')); for(const entry of logs) { const row = node('div','log-row'); row.append(node('span','log-number',String(entry.number).padStart(2,'0')),node('span','log-type',entry.type),node('span','log-message',entry.message),node('span','log-time',entry.time)); $('log-view').append(row); } }
+function render() {
+  const jobs = service.table.to_list(), waiting = service.waiting.to_list(), completed = service.completed.to_list();
+  $('total-count').textContent = jobs.length; $('waiting-count').textContent = waiting.length; $('done-count').textContent = completed.length;
+  $('pages-count').textContent = waiting.reduce((total,j) => total+j.pages,0).toLocaleString('zh-CN');
+  $('tab-all-count').textContent = jobs.length; $('tab-wait-count').textContent = waiting.length; $('tab-done-count').textContent = completed.length;
+  $('submit-job').disabled = service.table.is_full() || service.waiting.is_full(); $('process-job').disabled = !waiting.length;
+  $('undo-job').disabled = !service.undo_stack._size || service.waiting.is_full(); $('load-demo').disabled = jobs.length !== 0;
+  $('load-demo').title = jobs.length ? '示例仅能在空登记表中载入，刷新页面后可重新开始' : '载入小林、小周和小陈三条等待任务';
+  $('capacity-hint').textContent = service.table.is_full() ? '本轮登记已满 20 项，刷新可重新实验' : service.waiting.is_full() ? '等待队列已满，请先处理一项' : `当前还可加入 ${service.waiting.capacity-waiting.length} 个等待任务`;
+  $('operation-hint').textContent = service.waiting.is_full() && service.undo_stack._size ? '队列已满，请先处理一项后再撤销。' : waiting.length ? `下一项：${waiting[0].owner} · ${waiting[0].pages} 页` : '任务将按提交顺序依次处理。';
+  renderTable(); renderStructures(); renderLogs();
+}
+$('submit-form').addEventListener('submit', event => { event.preventDefault(); perform(() => { const pages = numberInput($('pages').value,'页数'); const job = service.submit($('owner').value,pages); record('提交',`任务 #${job.job_id} · ${job.owner} · ${job.pages} 页，已加入队尾`); queryId = null; currentFilter = '全部'; $('search-id').value = ''; $('owner').value = ''; $('owner').focus(); notify(`任务 #${job.job_id} 已加入等待队列`); }); });
+$('process-job').addEventListener('click', () => perform(() => { const job = service.process_next(); record('处理',`任务 #${job.job_id} · ${job.owner} 已完成，写入链表并压入栈`); notify(`任务 #${job.job_id} 已处理完成`); }));
+$('undo-job').addEventListener('click', () => perform(() => { const job = service.undo_process(); record('撤销',`任务 #${job.job_id} 已恢复等待，并放回队首`); notify(`已撤销任务 #${job.job_id} 的处理，恢复到队首`); }));
+$('load-demo').addEventListener('click', () => perform(() => { if(service.table._size) throw new LabError('请在空登记表中载入示例'); for(const [owner,pages] of [['小林',3],['小周',5],['小陈',2]]) service.submit(owner,pages); record('示例','已载入任务 1、2、3，可连续处理两次再撤销一次'); currentFilter = '全部'; queryId = null; notify('已载入 3 个示例任务，可以开始实验'); }));
+$('check-state').addEventListener('click', () => perform(() => { service.check_invariants(); record('检查','状态一致性检查通过，任务记录、等待顺序和撤销记录一致'); notify('状态一致性检查通过'); }));
+$('search-form').addEventListener('submit', event => { event.preventDefault(); perform(() => { const id = numberInput($('search-id').value,'编号'); const job = service.find(id); queryId = id; currentFilter = '全部'; notify(job ? `已找到任务 #${id}：${job.owner}，${job.status}` : `未找到任务 #${id}`, job ? '' : 'info'); }); });
+$('clear-search').addEventListener('click', () => { queryId = null; $('search-id').value = ''; renderTable(); });
+$('search-id').addEventListener('input', event => { if (!event.target.value.trim() && queryId !== null) { queryId = null; renderTable(); } });
+for (const tab of document.querySelectorAll('[data-filter]')) tab.addEventListener('click', () => { currentFilter = tab.dataset.filter; queryId = null; $('search-id').value = ''; renderTable(); });
+for (const link of document.querySelectorAll('.nav a')) link.addEventListener('click', () => { for(const other of document.querySelectorAll('.nav a')) other.classList.toggle('active',other===link); });
+render();
+</script>
+</body></html>
